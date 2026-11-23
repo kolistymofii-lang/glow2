@@ -11,16 +11,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class GlowMixin {
-    @Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
-    private void forceGlow(CallbackInfoReturnable<Boolean> cir) {
-        if (!GlowMod.enabled) return;
+    private boolean glowTarget() {
         Entity self = (Entity) (Object) this;
         Minecraft mc = Minecraft.getInstance();
-        if (self instanceof Player
+        return GlowMod.enabled
+                && self instanceof Player
                 && mc.player != null
                 && self != mc.player
-                && mc.player.distanceTo(self) <= 200) {
-            cir.setReturnValue(true);
-        }
+                && mc.player.distanceTo(self) <= 200;
+    }
+
+    @Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
+    private void forceGlow(CallbackInfoReturnable<Boolean> cir) {
+        if (glowTarget()) cir.setReturnValue(true);
+    }
+
+    @Inject(method = "getTeamColor", at = @At("HEAD"), cancellable = true)
+    private void purpleOutline(CallbackInfoReturnable<Integer> cir) {
+        if (glowTarget()) cir.setReturnValue(0xBF00FF);
     }
 }
