@@ -4,6 +4,9 @@
   "version": "1.0",
   "name": "Glow Mod",
   "environment": "client",
+  "entrypoints": {
+    "client": ["com.example.GlowMod"]
+  },
   "mixins": ["glowmod.mixins.json"],
   "depends": {
     "fabricloader": ">=0.18.1",
