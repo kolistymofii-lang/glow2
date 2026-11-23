@@ -1,5 +1,6 @@
 package com.example.mixin;
 
+import com.example.GlowMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class GlowMixin {
     @Inject(method = "isCurrentlyGlowing", at = @At("HEAD"), cancellable = true)
     private void forceGlow(CallbackInfoReturnable<Boolean> cir) {
+        if (!GlowMod.enabled) return;
         Entity self = (Entity) (Object) this;
         Minecraft mc = Minecraft.getInstance();
         if (self instanceof Player
